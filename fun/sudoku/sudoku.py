@@ -33,7 +33,7 @@ class SudokuBoard:
         assert self.isValid()
 
     def _get_initial_possible_state(self):
-        pstate = list(range(1, 10))
+        pstate = set(range(1, 10))
         pstate = [pstate.copy() for i in range(9 * 9)]
         return pstate
 
@@ -125,7 +125,8 @@ class SudokuBoard:
         s = "\n"
         for i, row in enumerate(self.rows()):
             for j, el in enumerate(row):
-                s += f"{el} "
+                p = " " if el == 0 else str(el)
+                s += f"{p} "
                 if j % 3 == 2:
                     s += " "
             s += "\n"
@@ -137,13 +138,13 @@ class SudokuBoard:
         self.update_counter += 1
 
         self.state[idx] = value
-        self.p_state[idx] = [value]
+        self.p_state[idx] = {value}
         if self.debug:
             assert self.isValid(), "invalid board"
         self.print_state()
 
         if self.isSolved():
-            print(f"Solved in {self.update_counter} moves.")
+            print(f"Solved.")
 
     def reduce_possible_state(self):
         count = 0
@@ -164,20 +165,27 @@ class SudokuBoard:
 
         for row_i in self._generate_board_elements_indices():
             row = [self.state[i] for i in row_i]
-            c = Counter(row)
             # check if row/col/square can eliminate possibilities
-            vals = c.keys()
+            vals = set(row)
             for i in row_i:
                 if self.state[i] != 0:
                     continue
 
-                possibilities = self.p_state[i]
-                for v in vals:
-                    if v in possibilities:
-                        possibilities.remove(v)
-                        if len(possibilities) == 1:
-                            self.update_state(i, possibilities[0])
-                            self.reduce_possible_state()
+                possibilities = self.p_state[i] - vals
+                if len(possibilities) == 1:
+                    self.update_state(i, possibilities.pop())
+                    self.reduce_possible_state()
+
+                elif len(possibilities) == 0:
+                    raise RuntimeError
+
+        # now do a check for if there's only one place
+        # a certain value exists as a possibility
+        for row_i in self._generate_board_elements_indices():
+            ps = (self.p_state[i] for i in row_i)
+            c = Counter(j for i in ps for j in i)
+            if 1 in c.values():
+                ...
 
     def iteratively_solve(self):
         iterations = 1
@@ -191,7 +199,7 @@ class SudokuBoard:
     def _update_p_state_from_state(self):
         for i, v in enumerate(self.state):
             if v != 0:
-                self.p_state[i] = [v]
+                self.p_state[i] = {v}
 
     def _update_state_from_p_state(self):
         count = 0
