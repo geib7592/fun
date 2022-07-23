@@ -195,6 +195,8 @@ class SudokuBoard:
 
     def _check_for_one_place(self, element_indices) -> tuple:
         """
+        check if there's only one place a certain value can be
+        
         element_indices: generator of indices for a row, column, or square
         """
         ps = filter(self.indefinite, (self.p_state[i] for i in element_indices))
