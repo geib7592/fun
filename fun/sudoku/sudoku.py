@@ -136,17 +136,19 @@ class SudokuBoard:
 
     def print_state(self):
         os.system("clear")
-        s = "┣━━━━━╋━━━━━╋━━━━━┫\n"
+        s = "╔═════╦═════╦═════╗\n"
         for i, rowi in enumerate(self.row_indices()):
-            s += "┃"
+            s += "║"
             for j, el in enumerate(self.p_state[j] for j in rowi):
                 p = " " if len(el) > 1 else str(*el)
                 s += f"{p}"
 
-                s += "┃" if j % 3 == 2 else "│"
+                s += "║" if j % 3 == 2 else "│"
             s += "\n"
-            if i % 3 == 2:
-                s += "┣━━━━━╋━━━━━╋━━━━━┫\n"
+            if i == 2 or i == 5:
+                s += "╠═════╬═════╬═════╣\n"
+            elif i == 8:
+                s += "╚═════╩═════╩═════╝\n"
         print(s)
 
     def update_state(self, idx, value):
