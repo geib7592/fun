@@ -93,7 +93,6 @@ class SudokuBoard:
             yield [state[i] for i in col_i]
 
     def col_indices(self):
-        s = self.p_state
         n = 9  # n columns
         for i in range(n):
             yield range(i, n * n, n)
@@ -210,6 +209,42 @@ class SudokuBoard:
                     return i, value
         return 0, 0
 
+    def _eliminate_based_on_undetermined_squares(self, element_indices) -> tuple:
+        """
+        if you know a number occurs in a particular part
+        of a row/col/square, you might be able to eliminate possibilities
+        in other rows/cols/squares
+        """
+        row_definite = list(self.indicies_to_definite_state(element_indices))
+        row = list(self.indicies_to_possibilites(element_indices))
+        row_grouped_in_thirds = [
+            row[i].union(row[i + 1], row[i + 2]) for i in range(0, 9, 3)
+        ]
+        for val in VALUES:
+            if val in row_definite:
+                continue
+            val_in_thirds = [val in i for i in row_grouped_in_thirds]
+            if val_in_thirds.count(True) == 1:
+                # that value is only found in one third of the row/col/square
+                d = element_indices[-1] - element_indices[0]
+                idxs = [idx for i, idx in enumerate(element_indices) if val in row[i]]
+                if d in [8, 72]:  # row or col
+                    sq_ids = self._get_square_indicies_containing(idxs[0])
+                    for i in sq_ids:
+                        if i not in idxs:
+                            if val in self.p_state[i]:
+                                self.p_state[i].remove(val)
+
+                elif d == 20:  # square
+                    ...
+                ...
+        return 0, 0
+
+    def _get_square_indicies_containing(self, idx):
+        for sq in self.square_indices():
+            if idx in sq:
+                return sq
+
     def reduce_possible_state(self):
         if self.isSolved():
             return 0, 0
@@ -219,6 +254,7 @@ class SudokuBoard:
                 self._find_one_missing,
                 self._eliminate_possibilities,
                 self._check_for_one_place,
+                self._eliminate_based_on_undetermined_squares,
             ]:
                 idx, value = func(element_indices)
                 if value != 0:
