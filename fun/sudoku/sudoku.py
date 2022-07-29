@@ -6,7 +6,8 @@ VALUES = set(range(1, 10))
 
 
 class SudokuBoard:
-    def __init__(self, state=None, debug=False, show_state=True):
+    def __init__(self, state=None, debug=False, show_state=True, name=None):
+        self.name = name
         self.debug = debug
         self.show_state = show_state
         self.update_counter = 0
@@ -135,6 +136,8 @@ class SudokuBoard:
 
     def print_state(self):
         os.system("clear")
+        if self.name:
+            print(self.name)
         s = "╔═════╦═════╦═════╗\n"
         for i, rowi in enumerate(self.row_indices()):
             s += "║"
@@ -215,33 +218,54 @@ class SudokuBoard:
         of a row/col/square, you might be able to eliminate possibilities
         in other rows/cols/squares
         """
+        d = element_indices[-1] - element_indices[0]
+        element_type = {8: "row", 72: "col", 20: "square"}[d]
         row_definite = list(self.indicies_to_definite_state(element_indices))
         row = list(self.indicies_to_possibilites(element_indices))
         row_grouped_in_thirds = [
             row[i].union(row[i + 1], row[i + 2]) for i in range(0, 9, 3)
         ]
+        row_transpose_grouped_in_thirds = [
+            row[i].union(row[i + 3], row[i + 6]) for i in range(0, 3)
+        ]
         for val in VALUES:
             if val in row_definite:
                 continue
             val_in_thirds = [val in i for i in row_grouped_in_thirds]
-            if val_in_thirds.count(True) == 1:
+            val_trans_in_thirds = [val in i for i in row_transpose_grouped_in_thirds]
+            if val_in_thirds.count(True) == 1 or (
+                element_type == "square" and val_trans_in_thirds.count(True) == 1
+            ):
                 # that value is only found in one third of the row/col/square
-                d = element_indices[-1] - element_indices[0]
                 idxs = [idx for i, idx in enumerate(element_indices) if val in row[i]]
-                if d in [8, 72]:  # row or col
-                    sq_ids = self._get_square_indicies_containing(idxs[0])
-                    for i in sq_ids:
-                        if i not in idxs:
-                            if val in self.p_state[i]:
-                                self.p_state[i].remove(val)
+                if element_type in ["row", "col"]:
+                    ids = self._get_square_indicies_containing(idxs[0])
 
-                elif d == 20:  # square
-                    ...
-                ...
+                elif element_type == "square":  # square
+                    idx_diff = idxs[-1] - idxs[0]
+                    if idx_diff < 3:
+                        ids = self._get_row_indicies_containing(idxs[0])
+                    else:
+                        ids = self._get_col_indicies_containing(idxs[0])
+
+                for i in ids:
+                    if i not in idxs:
+                        if val in self.p_state[i]:
+                            self.p_state[i].remove(val)
         return 0, 0
 
     def _get_square_indicies_containing(self, idx):
         for sq in self.square_indices():
+            if idx in sq:
+                return sq
+
+    def _get_row_indicies_containing(self, idx):
+        for sq in self.row_indices():
+            if idx in sq:
+                return sq
+
+    def _get_col_indicies_containing(self, idx):
+        for sq in self.col_indices():
             if idx in sq:
                 return sq
 
@@ -303,7 +327,7 @@ def gen_test_boards():
 def solve_all_test_boards():
     for i, board_str in enumerate(gen_test_boards()):
         print(f"Board {i}")
-        S = SudokuBoard(state_str_to_list(board_str), debug=True)
+        S = SudokuBoard(state_str_to_list(board_str), debug=True, name=f"Board {i}")
         S.solve()
 
 
