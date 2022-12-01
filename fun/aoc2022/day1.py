@@ -18,7 +18,7 @@ def day1_part2():
 
 def get_sums():
     with open(INPUT_FILE_PATH, "r") as f:
-        contents = f.read()
+        contents = f.read().strip()
     grouped_contents = contents.split("\n\n")
     sums = map(sum_string, grouped_contents)
     return sums
@@ -28,7 +28,7 @@ def sum_string(s: str):
     """
     s like '18117\n13193\n13899\n19853'
     """
-    return sum(map(int, s.strip().split("\n")))
+    return sum(map(int, s.split("\n")))
 
 
 def day1_part1_1():
