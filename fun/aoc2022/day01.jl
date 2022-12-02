@@ -36,6 +36,6 @@ function num_elves(fname)
     return n + 1
 end
 
-fname = "input_files/day1_hgp.txt"
+fname = "input_files/day01_hgp.txt"
 find_big_boi_elf(fname)
 find_top_three(fname)

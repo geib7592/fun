@@ -59,5 +59,5 @@ function decrypt_to_RPS(x)
     end
 end
 
-total_score("input_files/day2_hgp.txt"; part=1) # 345.971 μs
-total_score("input_files/day2_hgp.txt"; part=2) # 279.882 μs
+total_score("input_files/day02_hgp.txt"; part=1) # 345.971 μs
+total_score("input_files/day02_hgp.txt"; part=2) # 279.882 μs
