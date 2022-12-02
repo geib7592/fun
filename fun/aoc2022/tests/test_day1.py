@@ -1,4 +1,4 @@
-from fun.aoc2022.day1 import *
+from fun.aoc2022.day01 import *
 
 
 def test_part1():
