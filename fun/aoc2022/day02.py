@@ -15,23 +15,18 @@ def read_file():
 
 
 def part1():
-    return solution_part1(read_file())
+    return solution(read_file(), part=1)
 
 
 def part2():
-    return solution_part2(read_file())
+    return solution(read_file(), part=2)
 
 
-def solution_part1(data: str):
-    m = get_score_map(get_score_part_1)
+def solution(data: str, part=1):
+    get_score = get_score_part_1 if part == 1 else get_score_part_2
+    score_map = get_score_map(get_score)
     rounds = data.strip().split("\n")
-    return sum(m[i] for i in rounds)
-
-
-def solution_part2(data: str):
-    m = get_score_map(get_score_part_2)
-    rounds = data.strip().split("\n")
-    return sum(m[i] for i in rounds)
+    return sum(map(score_map.get, rounds))
 
 
 def get_score_map(score_func) -> dict:
@@ -78,14 +73,14 @@ def timeit_results():
 
 
 if __name__ == "__main__":
-    assert solution_part1(example_data) == 15
-    assert solution_part2(example_data) == 12
+    assert solution(example_data, part=1) == 15
+    assert solution(example_data, part=2) == 12
 
     print(part1())
     print(part2())
 
     timeit_results()
     # timing results:
-    # part1, 1.527e-03 s
-    # part2, 1.444e-03 s
-    # part1_pandas, 7.737e-03 s
+    # part1, 2.707e-04 s
+    # part2, 2.681e-04 s
+    # part1_pandas, 7.825e-03 s
