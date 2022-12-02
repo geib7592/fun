@@ -25,8 +25,7 @@ def part2():
 def solution(data: str, part=1):
     get_score = get_score_part_1 if part == 1 else get_score_part_2
     score_map = get_score_map(get_score)
-    rounds = data.strip().split("\n")
-    return sum(map(score_map.get, rounds))
+    return sum(map(score_map.get, data.strip().split("\n")))
 
 
 def get_score_map(score_func) -> dict:
