@@ -17,43 +17,35 @@ def read_file():
 def solution(data: str, part=1):
     bags = data.strip().split("\n")
     if part == 1:
-        s = get_score(get_common_types(bags))
+        return sum(get_score(get_common_types(bags)))
     elif part == 2:
-        s = get_score(get_common_part2(bags))
-    return s
+        return sum(get_score(get_common_part2(bags)))
 
 
 def get_common_types(bags):
-    common = []
     for bag in bags:
         slot1 = set(bag[: len(bag) // 2])
         slot2 = set(bag[len(bag) // 2 :])
-        common += list(slot1 & slot2)
-    return common
-
-
-def get_score(common_types):
-    s = 0
-    for t in common_types:
-        if ord(t) <= ord("Z"):
-            s += ord(t) - ord("A") + 27
-        else:
-            s += ord(t) - ord("a") + 1
-    return s
+        yield from slot1 & slot2
 
 
 def get_common_part2(bags):
-    common = []
-    n = len(bags)
-    for i in range(0, n, 3):
+    for i in range(0, len(bags), 3):
         group = bags[i : i + 3]
-        c = set(group[0]) & set(group[1]) & set(group[2])
-        common.append(c.pop())
-    return common
+        yield from set(group[0]).intersection(*group[1:])
 
 
-assert solution(example_data, part=1) == 157
-print(solution(read_file(), part=1))
+def get_score(common_types):
+    for t in common_types:
+        if ord(t) <= ord("Z"):
+            yield ord(t) - ord("A") + 27
+        else:
+            yield ord(t) - ord("a") + 1
 
-assert solution(example_data, part=2) == 70
-print(solution(read_file(), part=2))
+
+if __name__ == "__main__":
+    assert solution(example_data, part=1) == 157
+    print(solution(read_file(), part=1))
+
+    assert solution(example_data, part=2) == 70
+    print(solution(read_file(), part=2))
