@@ -65,7 +65,7 @@ def parse_filesystem(data):
             continue
 
         elif line.startswith("dir"):
-            d = line[4:].strip()
+            continue
 
         else:
             size, fname = line.split(" ")
