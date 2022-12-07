@@ -1,4 +1,5 @@
 import re
+from helpers import timeit_results
 
 INPUT_FILE_PATH = "fun/aoc2022/input_files/day05_gap.txt"
 
@@ -46,20 +47,21 @@ def parse_instructions(data):
     m = map(int, s)
     while True:
         try:
-            yield next(m), next(m), next(m)
+            yield next(m), next(m) - 1, next(m) - 1
         except StopIteration:
             break
 
 
 def solution(data: str, part=1):
     state = get_initial_state(data)
-    for inst in parse_instructions(data):
+    for move_n, a, b in parse_instructions(data):
         if part == 1:
-            for num in range(inst[0]):
-                state[inst[2] - 1].append(state[inst[1] - 1].pop())
+            for _ in range(move_n):
+                state[b].append(state[a].pop())
+
         elif part == 2:
-            state[inst[2] - 1] += state[inst[1] - 1][-inst[0] :]
-            state[inst[1] - 1] = state[inst[1] - 1][: -inst[0]]
+            state[b] += state[a][-move_n:]
+            state[a] = state[a][:-move_n]
 
     s = ""
     for stack in state:
@@ -74,3 +76,6 @@ if __name__ == "__main__":
 
     assert solution(example_data, part=2) == "MCD"
     print(solution(read_file(), part=2))
+
+    f = lambda: solution(read_file(), part=1)
+    timeit_results(f)
