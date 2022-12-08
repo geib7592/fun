@@ -50,8 +50,8 @@ def solution(data: str, part=1):
 
 
 def parse_filesystem(data):
-    fs = {"/": {}}
-    drs = []
+    fs = {}  # filesystem
+    drs = []  # list to track directories of current path
     for line in data:
         line: str
         if line.startswith("$ cd .."):
@@ -69,13 +69,11 @@ def parse_filesystem(data):
 
         else:
             size, fname = line.split(" ")
-            a = fs["/"]
-            for dname in drs[1:]:
-                if dname in a:
-                    a = a[dname]
-                else:
+            a = fs
+            for dname in drs:
+                if dname not in a:
                     a[dname] = {}
-                    a = a[dname]
+                a = a[dname]
             a[fname] = int(size)
     return fs
 
