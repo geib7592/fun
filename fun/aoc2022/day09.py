@@ -36,36 +36,32 @@ def solution(data: str, part=1):
     elif part == 2:
         N = 10
 
-    visited = set([(0, 0)])
+    visited = {(0, 0)}
     X = [0] * N
     Y = [0] * N
     for instruction in insts:
         direction, amount = instruction.split(" ")
         dx, dy = DIRECTIONS[direction]
         for j in range(int(amount)):
-            for i in range(len(X) - 1):
-                if i == 0:
-                    X[i] += dx
-                    Y[i] += dy
-
-                X[i], Y[i], X[i + 1], Y[i + 1] = move(X[i], Y[i], X[i + 1], Y[i + 1])
-
-            visited.add(tuple([X[i + 1], Y[i + 1]]))
-
+            X[0] += dx
+            Y[0] += dy
+            for i in range(1, len(X)):
+                X[i], Y[i] = move(X[i], Y[i], X[i - 1], Y[i - 1])
+            visited.add((X[i], Y[i]))
     return len(visited)
 
 
-def move(Hx, Hy, Tx, Ty):
+def move(Tx, Ty, Hx, Hy):
     dx = Hx - Tx
     dy = Hy - Ty
     if dy == 0 and abs(dx) > 1:
-        Tx += dx // 2
+        Tx += sign(dx)
     elif dx == 0 and abs(dy) > 1:
-        Ty += dy // 2
-    elif dx * dy != 0 and abs(dx * dy) > 1:
+        Ty += sign(dy)
+    elif abs(dx * dy) > 1:
         Tx += sign(dx)
         Ty += sign(dy)
-    return Hx, Hy, Tx, Ty
+    return Tx, Ty
 
 
 def sign(a):
