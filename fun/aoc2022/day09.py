@@ -54,11 +54,7 @@ def solution(data: str, part=1):
 def move(Tx, Ty, Hx, Hy):
     dx = Hx - Tx
     dy = Hy - Ty
-    if dy == 0 and abs(dx) > 1:
-        Tx += sign(dx)
-    elif dx == 0 and abs(dy) > 1:
-        Ty += sign(dy)
-    elif abs(dx * dy) > 1:
+    if abs(dx) > 1 or abs(dy) > 1:
         Tx += sign(dx)
         Ty += sign(dy)
     return Tx, Ty
