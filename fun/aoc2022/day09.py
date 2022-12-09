@@ -1,8 +1,3 @@
-from itertools import product
-
-import numpy as np
-from helpers import timeit_results
-
 example_data = """
 R 4
 U 4
@@ -36,66 +31,56 @@ def read_file():
 def solution(data: str, part=1):
     insts = data.strip().split("\n")
 
-    Hx, Hy = (0, 0)
-    Tx, Ty = (0, 0)
     if part == 1:
-        been_to = set([(Tx, Ty)])
-        for a in insts:
-            # print(a)
-            Hx, Hy, Tx, Ty, b = move(Hx, Hy, Tx, Ty, a, 0)
-            # print(Hx, Hy, Tx, Ty)
-            been_to.update(b)
-        return len(been_to)
-
+        N = 2
     elif part == 2:
-        return part2(insts)
+        N = 10
 
-
-def part2(insts):
-    been_to = set([(0, 0)])
-    X = [0] * 10
-    Y = [0] * 10
+    visited = set([(0, 0)])
+    X = [0] * N
+    Y = [0] * N
     for instruction in insts:
-        # print(instruction)
         direction, amount = instruction.split(" ")
-        amount = int(amount)
-        d = DIRECTIONS[direction]
-
-        for j in range(amount):
+        dx, dy = DIRECTIONS[direction]
+        for j in range(int(amount)):
             for i in range(len(X) - 1):
                 if i == 0:
-                    X[i] += d[0]
-                    Y[i] += d[1]
+                    X[i] += dx
+                    Y[i] += dy
 
                 X[i], Y[i], X[i + 1], Y[i + 1] = move(X[i], Y[i], X[i + 1], Y[i + 1])
 
-            been_to.add(tuple([X[i + 1], Y[i + 1]]))
+            visited.add(tuple([X[i + 1], Y[i + 1]]))
 
-    l = len(been_to)
-    return l
+    return len(visited)
 
 
 def move(Hx, Hy, Tx, Ty):
-    if Hy == Ty:
-        if abs(Hx - Tx) > 1:
-            Tx += (Hx - Tx) // 2
-    elif Hx == Tx:
-        if abs(Hy - Ty) > 1:
-            Ty += (Hy - Ty) // 2
-    else:
-        if abs(Hx - Tx) > 1:
-            Tx += (Hx - Tx) // 2
-            Ty += Hy - Ty
-        if abs(Hy - Ty) > 1:
-            Ty += (Hy - Ty) // 2
-            Tx += Hx - Tx
+    dx = Hx - Tx
+    dy = Hy - Ty
+    if dy == 0 and abs(dx) > 1:
+        Tx += dx // 2
+    elif dx == 0 and abs(dy) > 1:
+        Ty += dy // 2
+    elif dx * dy != 0 and abs(dx * dy) > 1:
+        Tx += sign(dx)
+        Ty += sign(dy)
     return Hx, Hy, Tx, Ty
 
 
-if __name__ == "__main__":
-    # assert solution(example_data, part=1) == 13
-    # print(solution(read_file(), part=1))
+def sign(a):
+    if a > 0:
+        return 1
+    elif a < 0:
+        return -1
+    elif a == 0:
+        return 0
 
-    # assert solution(example_data, part=2) == 1
+
+if __name__ == "__main__":
+    assert solution(example_data, part=1) == 13
+    print("Part 1: ", solution(read_file(), part=1))
+
+    assert solution(example_data, part=2) == 1
     assert solution(example_data2, part=2) == 36
-    print(solution(read_file(), part=2))
+    print("Part 2: ", solution(read_file(), part=2))
