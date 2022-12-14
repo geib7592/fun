@@ -58,6 +58,12 @@ def solution(data: str, part=1):
 
 
 def check_order(L1, L2):
+    """
+    Return: 
+        1 for correct order
+        0 for tie
+        -1 for incorrect order
+    """
     l1 = iter(L1)
     l2 = iter(L2)
 
@@ -95,8 +101,8 @@ def check_order(L1, L2):
     val = check_order(left, right)
     if val != 0:
         return val
-
-    return check_order(l1, l2)
+    else:
+        return check_order(l1, l2)
 
 
 if __name__ == "__main__":

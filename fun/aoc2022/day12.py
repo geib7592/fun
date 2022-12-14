@@ -36,6 +36,7 @@ class S:
             u = self.get_vertex_min_dist()
             if u is None:
                 return
+
             self.Q.remove(u)
 
             for v in self.get_accessible_neighbors(u):
@@ -63,10 +64,6 @@ class S:
             if self.dist[idx] < m:
                 m = self.dist[idx]
                 idx_min = idx
-
-        if idx_min is None:
-            return idx_min
-
         return idx_min
 
     def get_accessible_neighbors(self, idx: int):
