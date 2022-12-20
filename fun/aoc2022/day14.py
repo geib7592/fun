@@ -1,5 +1,5 @@
 from itertools import product
-
+from helpers import timeit_results
 example_data = """
 498,4 -> 498,6 -> 496,6
 503,4 -> 502,4 -> 502,9 -> 494,9
@@ -31,7 +31,9 @@ def get_points(rocks: set, part=1):
     pstart = (500, 0)
     x, y = pstart
     while True:
-        if part == 2 and y == y_floor:
+        if part == 1 and y == maxy:
+            break
+        elif part == 2 and y == y_floor:
             points.add((x, y))
             x, y = pstart
         elif (x, y + 1) not in points:
@@ -47,9 +49,6 @@ def get_points(rocks: set, part=1):
             if part == 2 and y == 0:
                 break
             x, y = pstart
-
-        if part == 1 and y == maxy:
-            break
 
     return points - rocks
 
@@ -94,3 +93,9 @@ if __name__ == "__main__":
 
     assert solution(example_data, part=2) == 93
     print("Part 2: ", solution(read_file(), part=2))
+
+    timeit_results(
+        lambda: solution(read_file(), part=1), # 30 ms
+        lambda: solution(read_file(), part=2), # 0.8 s
+        n=5
+    )
