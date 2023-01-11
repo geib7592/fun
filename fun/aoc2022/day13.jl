@@ -28,34 +28,56 @@ function solution(ifile; part)
     end
 end
 
+"""
+    in_order(x, y)
+
+ 1 - correct order
+ 0 - tie
+-1 - incorrect order
+"""
 function in_order(x, y)
     for i ∈ eachindex(x)
+        # x is longer than y → incorrect
         if i > length(y)
             return -1
         end
+
+        # compare ith elements of x and y
         left = x[i]
         right = y[i]
+
+        # deal with possible types
         if typeof(left) == typeof(right) <: Integer
+            # regular integer ordering
             if left < right
                 return 1
             elseif left > right
                 return -1
             else
+                # equal, go to next element
                 continue
             end
         elseif typeof(left) <: Integer
+            # right must be a list, change left
             left = [left]
         elseif typeof(right) <: Integer
+            # left must be a list, change right
             right = [right]
         end
+
+        # recursively run check on left and right
         check = in_order(left, right) 
         if check != 0
             return check
         end
     end
+
+    # y is longer than x → correct
     if length(y) > length(x)
         return 1
     end
+
+    # otherwise, tie
     return 0
 end
 
