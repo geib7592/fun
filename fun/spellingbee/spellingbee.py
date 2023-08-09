@@ -3,45 +3,29 @@ import random
 ALPHABET = "abcdefghijklmnopqrstuvwxyz"
 
 with open("/usr/share/dict/words", "r") as f:
-    words = [line.rstrip() for line in f]
-WORDS = []
-for word in words:
-    if len(word) > 3 and all(letter in ALPHABET for letter in word):
-        WORDS.append(word)
+    WORDS = [line.rstrip() for line in f if len(line.rstrip()) > 3 and all(letter in ALPHABET for letter in line.rstrip())]
 
 def get_letters(n, rand=False):
     if rand:
         return random.sample(ALPHABET, n)
     else:
-        all_pans = all_pangrams(n)
-        pan = all_pans[random.randint(0, len(all_pans))]
+        pan = random.choice(all_pangrams(n))
         return random.sample(list(set(pan)), n)
 
 def possible_words(letters):
-    pos = []
-    for word in WORDS:
-        if all(letter in letters for letter in word) and letters[0] in word:
-            pos.append(word)
-    return pos
+    return [word for word in WORDS if all(letter in letters for letter in word) and letters[0] in word]
 
 def all_pangrams(n):
-    all_pans = []
-    for word in WORDS:
-        if len(set(word)) == n:
-            all_pans.append(word)
-    return all_pans
+    return [word for word in WORDS if len(set(word)) == n]
 
 def pangrams(letters, pos):
-    pans = []
-    for word in pos:
-        if all(letter in word for letter in letters):
-            pans.append(word)
-    return pans
+    return [word for word in pos if all(letter in word for letter in letters)]
 
 if __name__ == "__main__":
     letters = get_letters(7)
+    # letters = ["n", "d", "z", "e", "l", "y", "a"]
     print("Letters:", letters)
     pos = possible_words(letters)
     print("Possible Words (" + str(len(pos)) + "):", pos)
     pans = pangrams(letters, pos)
-    print("Pangrams:", pans)
+    print("Pangrams (" + str(len(pans)) + "):", pans)
