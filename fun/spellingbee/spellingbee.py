@@ -1,3 +1,4 @@
+import sys
 import random
 
 ALPHABET = "abcdefghijklmnopqrstuvwxyz"
@@ -22,8 +23,10 @@ def pangrams(letters, pos):
     return [word for word in pos if all(letter in word for letter in letters)]
 
 if __name__ == "__main__":
-    letters = get_letters(7)
-    # letters = ["n", "d", "z", "e", "l", "y", "a"]
+    if len(sys.argv) > 1:
+        letters = list(sys.argv[1].lower())
+    else:
+        letters = get_letters(7)
     print("Letters:", letters)
     pos = possible_words(letters)
     print("Possible Words (" + str(len(pos)) + "):", pos)
