@@ -39,6 +39,7 @@ def parse_input(data:str):
 def make_graph(p:list):
     nodes = [i[0] for i in p]
     flows = [i[1] for i in p]
+
     g = np.zeros([len(nodes), len(nodes)], dtype=int)
     for i, row in enumerate(p):
         g[i,i]=row[1]

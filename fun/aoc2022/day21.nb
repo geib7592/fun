@@ -1,0 +1,197 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      6210,        189]
+NotebookOptionsPosition[      5665,        170]
+NotebookOutlinePosition[      6004,        185]
+CellTagsIndexPosition[      5961,        182]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"s", "=", 
+   RowBox[{"Import", "[", 
+    RowBox[{"FileNameJoin", "[", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"NotebookDirectory", "[", "]"}], ",", " ", 
+       "\"\<input_files\>\"", ",", "\"\<day21_gap.txt\>\""}], "}"}], "]"}], 
+    "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"s", " ", "=", " ", 
+   RowBox[{"StringReplace", "[", 
+    RowBox[{"s", ",", 
+     RowBox[{"\"\<:\>\"", "\[Rule]", "\"\< ->\>\""}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ssplit", " ", "=", 
+   RowBox[{"StringSplit", "[", 
+    RowBox[{"s", ",", " ", "\"\<\\n\>\""}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"rules", "=", 
+   RowBox[{"ToExpression", "/@", "ssplit"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"\"\<Part 1: \>\"", ",", " ", 
+    RowBox[{"root", "//.", "rules"}]}], "]"}], 
+  "\[IndentingNewLine]"}], "\n", 
+ RowBox[{
+  RowBox[{"names", "=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"StringTake", "[", 
+      RowBox[{"#", ",", "4"}], "]"}], "&"}], "/@", "ssplit"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"rootPosition", "=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Position", "[", 
+      RowBox[{"names", ",", "\"\<root\>\""}], "]"}], "//", "First"}], "//", 
+    "First"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"humnPosition", "=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Position", "[", 
+      RowBox[{"names", ",", "\"\<humn\>\""}], "]"}], "//", "First"}], "//", 
+    "First"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"rules2", " ", "=", 
+   RowBox[{"ToExpression", "/@", 
+    RowBox[{"Join", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"ssplit", "[", 
+       RowBox[{"[", 
+        RowBox[{"1", ";;", 
+         RowBox[{
+          RowBox[{"Min", "[", 
+           RowBox[{"{", 
+            RowBox[{"rootPosition", ",", " ", "humnPosition"}], "}"}], "]"}], 
+          "-", "1"}]}], "]"}], "]"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"ssplit", "[", 
+       RowBox[{"[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Min", "[", 
+           RowBox[{"{", 
+            RowBox[{"rootPosition", ",", " ", "humnPosition"}], "}"}], "]"}], 
+          "+", "1"}], ";;", 
+         RowBox[{
+          RowBox[{"Max", "[", 
+           RowBox[{"{", 
+            RowBox[{"rootPosition", ",", " ", "humnPosition"}], "}"}], "]"}], 
+          "-", "1"}]}], "\[IndentingNewLine]", "]"}], "]"}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"ssplit", "[", 
+       RowBox[{"[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Max", "[", 
+           RowBox[{"{", 
+            RowBox[{"rootPosition", ",", " ", "humnPosition"}], "}"}], "]"}], 
+          "+", "1"}], ";;"}], "]"}], "]"}]}], "\[IndentingNewLine]", 
+     "]"}]}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"name1", "=", 
+   RowBox[{
+    RowBox[{"StringSplit", "[", 
+     RowBox[{"ssplit", "[", 
+      RowBox[{"[", "rootPosition", "]"}], "]"}], "]"}], "[", 
+    RowBox[{"[", "3", "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"name2", "=", 
+   RowBox[{
+    RowBox[{"StringSplit", "[", 
+     RowBox[{"ssplit", "[", 
+      RowBox[{"[", "rootPosition", "]"}], "]"}], "]"}], "[", 
+    RowBox[{"[", "5", "]"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"humnRule", "=", 
+   RowBox[{
+    RowBox[{"Solve", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"ToExpression", "[", "name1", "]"}], "==", 
+         RowBox[{"ToExpression", "[", "name2", "]"}]}], ")"}], "//.", 
+       "rules2"}], ",", "humn"}], "]"}], "//", "First"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Print", "[", 
+  RowBox[{"\"\<Part 2: \>\"", ",", " ", 
+   RowBox[{"humn", "/.", "humnRule"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.880719889813675*^9, 3.8807200238058767`*^9}, {
+   3.880720056421228*^9, 3.8807200997820797`*^9}, {3.880720156965592*^9, 
+   3.88072017658634*^9}, {3.88072130335952*^9, 3.880721392564746*^9}, {
+   3.8807214501821947`*^9, 3.8807214599098597`*^9}, {3.8807223410689917`*^9, 
+   3.880722445845254*^9}, 3.880813446836226*^9},
+ CellLabel->"In[14]:=",ExpressionUUID->"68de954e-bb7e-40ab-a546-f424d51c3b18"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Part 1: \"\>", "\[InvisibleSpace]", "38914458159166"}],
+  SequenceForm["Part 1: ", 38914458159166],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.8807223844214067`*^9, 3.8807224237451677`*^9}, {
+  3.88081342497256*^9, 3.880813448692556*^9}},
+ CellLabel->
+  "During evaluation of \
+In[14]:=",ExpressionUUID->"cbd2b7d6-e0f6-455c-9a29-5aee38debbf2"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Part 2: \"\>", "\[InvisibleSpace]", "3665520865940"}],
+  SequenceForm["Part 2: ", 3665520865940],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.8807223844214067`*^9, 3.8807224237451677`*^9}, {
+  3.88081342497256*^9, 3.880813449996367*^9}},
+ CellLabel->
+  "During evaluation of \
+In[14]:=",ExpressionUUID->"deda7fc9-8cc9-4f6a-99b1-a06e3fbdebba"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{979, 902},
+WindowMargins->{{Automatic, 565}, {114, Automatic}},
+FrontEndVersion->"12.0 for Mac OS X x86 (64-bit) (April 8, 2019)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 4229, 120, 430, "Input",ExpressionUUID->"68de954e-bb7e-40ab-a546-f424d51c3b18"],
+Cell[CellGroupData[{
+Cell[4834, 146, 401, 9, 24, "Print",ExpressionUUID->"cbd2b7d6-e0f6-455c-9a29-5aee38debbf2"],
+Cell[5238, 157, 399, 9, 24, "Print",ExpressionUUID->"deda7fc9-8cc9-4f6a-99b1-a06e3fbdebba"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
