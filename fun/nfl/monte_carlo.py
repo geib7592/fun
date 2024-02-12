@@ -12,6 +12,7 @@ def single_run(win_prob_pct: list[float], points: list[int]) -> int:
 
 
 def many_runs(win_prob_pct: list[float], points: list[int], N: int) -> int:
+    N = int(N)
     r = np.random.uniform(size=(N, len(win_prob_pct)))
     win_prob = 0.01 * np.array(win_prob_pct)
     win_prob_tiled = np.tile(win_prob, (N, 1))
@@ -104,6 +105,47 @@ def get_randomized_picks(win_prob_pct: list[float], shift_pct: float = 0):
     return choices
 
 
+def odds_of_winning():
+    probs = [
+        0.792,
+        0.846,
+        0.762,
+        0.783,
+        0.556,
+        0.655,
+        0.545,
+        0.661,
+        0.535,
+        0.512,
+        0.524,
+        0.545,
+        0.636,
+        0.810,
+        0.661,
+        0.630,
+    ]
+    choices1 = [1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1]
+    ranks1 = [3, 1, 5, 4, 11, 9, 16, 8, 15, 13, 14, 12, 10, 2, 7, 6]
+    choices2 = [1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1]
+    ranks2 = [3, 2, 10, 11, 13, 8, 7, 6, 9, 12, 16, 15, 4, 5, 14, 1]
+    winpct = [
+        100 * p * choices1[i] + 100 * (1 - p) * (1 - choices1[i])
+        for i, p in enumerate(probs)
+    ]
+    points = [len(ranks1) - i + 1 for i in ranks1]
+    y1 = many_runs(winpct, points, 1e4)
+
+    winpct = [
+        100 * p * choices2[i] + 100 * (1 - p) * (1 - choices2[i])
+        for i, p in enumerate(probs)
+    ]
+    points = [len(ranks2) - i + 1 for i in ranks2]
+    y2 = many_runs(winpct, points, 1e4)
+
+    prob_2_wins = sum((y2 - y1) > 0) / len(y1)
+    return prob_2_wins
+
+
 if __name__ == "__main__":
-    bet_against_the_toss_ups()
+    odds_of_winning()
     ...
